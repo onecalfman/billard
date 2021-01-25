@@ -19,7 +19,7 @@ static double Stockanfangsort = -800.0;
 static double my = 0.01; 	// Rollreibung
 static double bande = 0.8; 	// D?mpfung durch die Bande
 static double r = 30.0;  	// Kugelradius
-static double ForceScale = 0.06;// Skalierungskonstante f¨¹r die Kraft bei Stoss mit dem Queue
+static double ForceScale = 0.06;// Skalierungskonstante fÂ¨Â¹r die Kraft bei Stoss mit dem Queue
 static bool Foul = true;        // ob es ein Foul eintritt
 static bool Treffe = false;     // ob der weisse Kugel anderen Kugeln trifft
 static bool insloch = false;      //gibt es ein Kugel, der in dieser Runde in das Loch gegangen ist
@@ -100,12 +100,12 @@ class Billard : public TPlan {
     		double y,z,	// Koordinatesystem
 		       xZ,yZ,	// Queue Ziel
 		       force,	// Kraft beim Stoss mit dem Queue
-                       t1,t2,t3,
+                       t1,t2,
                        K0w,K0h;
                 int    Mode,
                        K0On,K0Move;
 
-		TVektor Z;
+		TVektor Z,K0;
 		bool moving;	// Bewegen sich Kugeln?
 
                 Kugel kugeln[N];
@@ -187,7 +187,14 @@ class Billard : public TPlan {
 
 	void DrawForce(double distance){
 		if(Mode==0) force = (distance*0.9 < 800) ?  distance*0.9 : 800;
-                if(Mode==1) force = ((800-(t2-t1))> 10)  ?  (800-(t2-t1)): 10;
+                // if(Mode==1) force = ((800-(t2-t1))> 10)  ?  (800-(t2-t1)): 10;
+                if(Mode==1){
+                   if((t2-t1) <= 790)   force = 800-(t2-t1);
+                   if((t2-t1) >= 790 && (t2-t1)<=790*2)  force = -780+(t2-t1);
+                   if((t2-t1)>=790*2 &&(t2-t1) <=790*3)  force = 2380-(t2-t1);
+                   if((t2-t1)>=790*3 && (t2-t1)<=790*4)  force = -2360+(t2-t1);
+                   if((t2-t1)>=790*4) force = 10;
+                   }
 		SetPen(Rot);
 		SetBrush(Rot);
 		Circle(-400.0,-815.0,30.0);
@@ -233,7 +240,7 @@ void Billard::Init() {
 
 void Billard::Run() {
         if(kugeln[0].pos[0]>-635.0)      K0Move = 0;
-        if(kugeln[0].pos[0]==-634.99)    K0Move = 1;
+        if(kugeln[0].pos[0]==K0[0])    K0Move = 1;
 
 	moving = CheckMoving();
 	if ( moving ) {
@@ -248,21 +255,22 @@ void Billard::Run() {
 			kugeln[i].move();
 		}
 	}
-        if(! moving && Reihe){
-             if(! Treffe) Foul = true;
-             CheckFouls();
-             if(Foul || ! insloch){
-             Spieler1 = ! Spieler1;
-             Spieler2 = ! Spieler2;}
-             Reihe = false;}
-             // wenn keiner Kugeln ins Loch geht, oder wenn es ein Foul eintritt, wird der Spieler gewechselt
+  if(! moving && Reihe){
+    if(! Treffe) Foul = true;
+      CheckFouls();
+        if(Foul || ! insloch){
+          Spieler1 = ! Spieler1;
+          Spieler2 = ! Spieler2;
+        }
+        Reihe = false;
+  } // wenn keiner Kugeln ins Loch geht, oder wenn es ein Foul eintritt, wird der Spieler gewechselt
 	if(counter%2 == 0) {
-		DrawTable();	
+		DrawTable();
  		DrawKugeln();
-                DrawInfo();
-		if ( ! moving&&!K0Move) {DrawQueue(); }
+    DrawInfo();
+		if ( ! moving&&!K0Move) DrawQueue();
 	}
-        DrawFoul();
+  DrawFoul();
 	CallRun = True;
 	counter++;
         t2=counter;
@@ -521,6 +529,8 @@ void Billard::CheckHoles() {
                         if(! kugeln[i].inGame && ! Ordnung) Ordnung=1;}
                         //die Ordnung wird von dem erstem Ging ins Loch bestimmt
                 } }
+        if(kugeln[0].pos[1] == 800.0)    {kugeln[0].v=TVektor(0.0,0.0); kugeln[0].pos = TVektor(-635.0,0.0);  }
+        K0[0] = kugeln[0].pos[0];
 
 }
 void Billard::CheckFouls(){
@@ -559,8 +569,8 @@ void Billard::CheckFouls(){
 
 
 void Billard::HandleBoxCollision() {
-	double tcx;	// Zeitanteil in dem die Kollision stattfinden w¨¹rde in x
-	double tcy;	// Zeitanteil in dem die Kollision stattfinden w¨¹rde in y
+	double tcx;	// Zeitanteil in dem die Kollision stattfinden wÂ¨Â¹rde in x
+	double tcy;	// Zeitanteil in dem die Kollision stattfinden wÂ¨Â¹rde in y
 	for(int i = 0; i < N; i++) {
 		kugeln[i].next = kugeln[i].pos + kugeln[i].v * (1 - my);
 
