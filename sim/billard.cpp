@@ -22,12 +22,12 @@ static double r = 30.0;  	// Kugelradius
 static double ForceScale = 0.06;// Skalierungskonstante f¨¹r die Kraft bei Stoss mit dem Queue
 static bool Foul = true;        // ob es ein Foul eintritt
 static bool Treffe = false;     // ob der weisse Kugel anderen Kugeln trifft
-static bool insloch = false;      //gibt es ein Kugel, der in dieser Runde in das Loch gegangen ist
-static bool Spieler1 = true;     // ob der Spieler 1 jetzt spielen
-static bool Spieler2 = false;    // ob der Spieler 2 jetzt spielen
-static bool Reihe = false;       // ob es in Game ist
-static bool erststoss = false;    //ob der wesse Kugel anderen schon ein mal gestosst
-static int Ordnung = 0;          //Die Ornung von Kugeln fuer beide Spielern
+static bool insloch = false;    //gibt es ein Kugel, der in dieser Runde in das Loch gegangen ist
+static bool Spieler1 = true;    // ob der Spieler 1 jetzt spielen
+static bool Spieler2 = false;   // ob der Spieler 2 jetzt spielen
+static bool Reihe = false;      // ob es in Game ist
+static bool erststoss = false;  //ob der wesse Kugel anderen schon ein mal gestosst
+static int Ordnung = 0;         //Die Ornung von Kugeln fuer beide Spielern
 static bool Gameon = false;     // this Game is not on
 int counter = 0;
 
@@ -64,13 +64,13 @@ private:
 
 public:
     int n; 		// Nummer der Kugel
-    real r; 	// Radius
+    real r; 		// Radius
     TVektor pos;	// Position pos[0] = x, pos[1] = y
     TVektor next;	// Posistion in der N?chsten Iteration
-    TVektor v;	// Geschwindigkeit
-    double m;	// Masse
+    TVektor v;		// Geschwindigkeit
+    double m;		// Masse
     bool inGame;	// Ist Kugel im Spiel
-    bool insloch2;   //ob dieser Kugel in dieser Runde ins Loch geht
+    bool insloch2;   	//ob dieser Kugel in dieser Runde ins Loch geht
     TColor color;
 
     void init_Kugel(int n, real x, real y, TColor color) {
