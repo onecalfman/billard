@@ -1,0 +1,66 @@
+---
+documentclass: scrreprt
+classoption:
+ - twocolumn
+ - 12pt
+ - a4paper
+ - german
+ - BCOR10mm
+ - DIV14
+ - parskip=half
+ - oneside
+ - openany,
+ - numbers=noenddot
+ - bibligraphy=totoc
+ - index=totoc
+author:
+ - Xiao Wang
+ - Liucheng Kang
+ - Bin Zouh
+ - Jonas Walkling
+lang: de
+title: Simulation eines Billardspiels
+bibliography: ref.bib
+link-citations: true
+tables-no-page-break: true
+header-includes:
+  - \def \AUTHOR     {Xiao Wang, Liucheng Kang, Bin Zouh, Jonas Walkling} 
+  - \def \TITLE      {Simulation eines Billiardspiels}
+  - \def \TYPE       {Diplomarbeit/Studienarbeit/Masterarbeit/Bachelorarbeit/Projektarbeit}
+  - \def \MATRIKELNR {1234567}
+  - \def \BETREUER   {Ms. S. Vor- und Zuname}
+  - \usepackage{scrlayer-scrpage}
+  - \setheadsepline[\textwidth+20pt]{0.5pt}
+  - \usepackage[T1]{fontenc}
+  - \usepackage{tikz-uml}
+  - \usepackage{tikz}
+  - \usetikzlibrary{calc}
+  - \usetikzlibrary{arrows,decorations.markings}
+  - \usepackage{svg}
+  - \usepackage[]{hyperref}
+  - \hypersetup{pdftitle={\TITLE}}
+  - \hypersetup{pdfauthor={\AUTHOR}}
+  - \hypersetup{pdfcreator={pdfLatex}}
+  - \hypersetup{pdfsubject={\TYPE\ am Institut für Dynamik und Schwingungen der Technischen Universität Braunschweig}}
+  - \hypersetup{pdfkeywords={\TYPE, Technische Universität Braunschweig, TU-BS, Institut für Dynamik und Schwingungen, IDS, \TITLE, \AUTHOR, \MATRIKELNR, \BETREUER}}
+  - \hypersetup{colorlinks={true}}
+  - \hypersetup{linkcolor={black}}
+  - \hypersetup{citecolor={black}}
+  - \hypersetup{filecolor={black}}
+  - \hypersetup{urlcolor={black}}
+  - \hypersetup{pdflang={de}}
+  - \hypersetup{hyperindex=true}
+  - \usepackage{booktabs}
+  - \usepackage{makecell}
+  - \usepackage{wrapfig}
+  - \usepackage{float}
+  - \setcounter{secnumdepth}{3}
+  - \setcounter{tocdepth}{4}
+  - \usepackage[ngerman]{datenumber}
+  - \pagestyle{scrheadings}
+  - \setheadsepline{.4pt}
+  - \usepackage{bm} 
+  - \usepackage{units}
+  - \usepackage[final]{pdfpages}
+  - \usepackage{graphicx}
+---

@@ -1,18 +1,10 @@
 ---
-documentclass: scrreprt
+documentclass: article
 classoption:
  - twocolumn
  - 12pt
  - a4paper
  - german
- - BCOR10mm
- - DIV14
- - parskip=half
- - oneside
- - openany,
- - numbers=noenddot
- - bibligraphy=totoc
- - index=totoc
 author:
  - Xiao Wang
  - Liucheng Kang
@@ -24,43 +16,16 @@ bibliography: ref.bib
 link-citations: true
 tables-no-page-break: true
 header-includes:
-  - \def \AUTHOR     {Xiao Wang, Liucheng Kang, Bin Zouh, Jonas Walkling} 
-  - \def \TITLE      {Simulation eines Billiardspiels}
-  - \def \TYPE       {Diplomarbeit/Studienarbeit/Masterarbeit/Bachelorarbeit/Projektarbeit}
-  - \def \MATRIKELNR {1234567}
-  - \def \BETREUER   {Ms. S. Vor- und Zuname}
-  - \usepackage{scrlayer-scrpage}
-  - \setheadsepline[\textwidth+20pt]{0.5pt}
   - \usepackage[T1]{fontenc}
+  - \usepackage{tikz-uml}
   - \usepackage{tikz}
   - \usetikzlibrary{calc}
   - \usetikzlibrary{arrows,decorations.markings}
   - \usepackage{svg}
-  - \usepackage[]{hyperref}
-  - \hypersetup{pdftitle={\TITLE}}
-  - \hypersetup{pdfauthor={\AUTHOR}}
-  - \hypersetup{pdfcreator={pdfLatex}}
-  - \hypersetup{pdfsubject={\TYPE\ am Institut für Dynamik und Schwingungen der Technischen Universität Braunschweig}}
-  - \hypersetup{pdfkeywords={\TYPE, Technische Universität Braunschweig, TU-BS, Institut für Dynamik und Schwingungen, IDS, \TITLE, \AUTHOR, \MATRIKELNR, \BETREUER}}
-  - \hypersetup{colorlinks={true}}
-  - \hypersetup{linkcolor={black}}
-  - \hypersetup{citecolor={black}}
-  - \hypersetup{filecolor={black}}
-  - \hypersetup{urlcolor={black}}
-  - \hypersetup{pdflang={de}}
-  - \hypersetup{hyperindex=true}
-  - \usepackage{booktabs}
-  - \usepackage{makecell}
   - \usepackage{wrapfig}
   - \usepackage{float}
   - \setcounter{secnumdepth}{3}
   - \setcounter{tocdepth}{4}
-  - \usepackage[ngerman]{datenumber}
-  - \pagestyle{scrheadings}
-  - \setheadsepline{.4pt}
-  - \usepackage{bm} 
-  - \usepackage{units}
-  - \usepackage[final]{pdfpages}
   - \usepackage{graphicx}
 ---
 
@@ -86,7 +51,6 @@ Im makroskopischen Bereich ist der elastische Stoss nur als Idealisierung zu bet
 Im gegensatz zu den Kugeln, welche aus Phenoplast hergestellt werden, besteht der Bandenspiegel um den Tisch herum aus vulkanisierten Elastomeren, welche dazu dienen den Energieverlust des Balles gering zu halten. Je nach den gewählten Materialien unterscheidet sich das Effet verhalten des Balles. In unserem Fall gehen wir von einer harten und dichten Bande aus. Der Stoss kann so als rein elastisch betrachtet werden.
 
 ## Rollreibung
-
 
 Das zweite physikalische Phänomen, welches beim Billardtisch auftaucht ist die Rollreibung der Kugel auf dem Tisch beziehungsweise Tuch. Die Rollreibung lässt sich durch die nachfolgende Gleichung bestimmen.
 \begin{align*}
@@ -172,8 +136,6 @@ Hier wird dann noch in jedem Iterationsschritt die Geschwindigkeit um den durch 
 
 ### Kollision mit der Bande
 
-Das nächste physikalische Problem ist die Kollision von Kugeln und Bande. Hier handelt es sich wie eingangs erwähnt um einen einen elastischen Stoss. Da die Bande unbeweglich und gerade ist gilt, dass sich nur der Anteil der Kraft im Vorzeichen ändert, welcher Senkrecht zur Wand steht.
-
 \begin{figure}
 \centering
 \begin{tikzpicture}
@@ -195,6 +157,131 @@ Das nächste physikalische Problem ist die Kollision von Kugeln und Bande. Hier 
 \end{tikzpicture}
 \caption{Kollision mit der Bande}
 \end{figure}
+
+Das nächste physikalische Problem ist die Kollision von Kugeln und Bande. Hier handelt es sich wie eingangs erwähnt um einen einen elastischen Stoss. Da die Bande unbeweglich und gerade ist gilt, dass sich nur der Anteil der Kraft im Vorzeichen ändert, welcher Senkrecht zur Wand steht. Demnach wäre die Geschwindigkeit nach der Kollision in Abbildung 2.2  $$ v_0 = \begin{bmatrix} - v_{x,0} \\ v_{y,0} \end{bmatrix}, \quad v_1 = \begin{bmatrix} - v_{x,0} \\ v_{y,0} \end{bmatrix} $$
+
+## Informatik
+
+Nachdem im vorherigen Kapitel die physikalischen Grundlagen diskutiert wurden die Notwendig sind, um ein zweidimensionales Billardspiel zu Modellieren, soll es nun um einige Ideen gehen die zur Praktischen Umsetzung notwendig sind.
+
+### Representation der Kugeln
+
+In diesem Fall ist es recht naheliegend eine Klasse für die Kugeln zu setzen, wobei die Klasse folgende Attribute und Methoden hat.
+
+
+\begin{figure}
+\centering
+\begin{tikzpicture}
+\tikzumlset{fill class=white}
+\umlclass{Kugel}{
+\begin{tabular}{lll}
+  n      &:& int \\
+  r      &:& double \\
+  pos    &:& TVektor \\
+  next   &:& TVektor \\
+  v      &:& TVektor \\
+  inGame &:& bool \\
+  color  &:& TColor
+\end{tabular}
+  }{
+\begin{tabular}{lll}
+  init()      &:& void \\
+  move()      &:& void \\
+  draw()      &:& void
+\end{tabular}
+  }
+\end{tikzpicture}
+\caption{Kugelklasse UML-Diagram}
+\end{figure}
+
+#### Masse
+
+Auffällig ist hier, dass die Kugel, kein Attribut für ihr Masse besitzt. Da angenommen wird, dass alle Kugeln die gleiche Masse besitzen spielt diese bei den Stossereignissen zwischen den Kugeln keine Rolle. Lediglich bei der beim abbremsen durch die Rollreibung würde das Gewicht eine Rolle spielen. Andererseits kann die Verlangsamung aber auch durch eine simple Konstante abgebildet werden und die Kugeln benötigt somit kein Attribut der Masse.
+
+### Kollisionserkennung
+
+Um nun zu erkennen, ob eine Kugel mit einer anderen Kollidiert kann der Hypothenusensatz angewendet werden. Hierzu kann man die Positionen \texttt{pos} von zwei Kugeln subtrahieren und erhält so einen Vektor für den Abstand. Eine Kollision zwischen zwei Kugeln liegt also vor, wenn gilt: $$r \geq \sqrt{(\texttt{k1}_{\text{pos,x}} - \texttt{k2}_{\text{pos,x}})^2  + (\texttt{k1}_{\text{pos,y}} - \texttt{k2}_{\text{pos,y}})^2} $$ Hierbei bezeichnen \texttt{k1} und \texttt{k2} jeweils eine Instanz der Kugel-Klasse.
+
+Die Erkennung von Kollisionen mit der Bande gestaltet sich rechnerisch noch simpler. $$ r \geq |\texttt{k}_{\text{pos,x}} - \text{Bande}_\text{x} | $$
+
+
+Allerdings kann es hier zu einem Optische störenden Phänomen kommen, bei dem die Kugel für einen Frame außerhalb der Spielfeldes gezeichnet wird. Da die Berechnung für die einzelnen Frames diskret verläuft, wird erst wieder im nächsten Durchlauf überprüft, ob die Bedingung für die Kollision erfüllt ist. Besonders bei hohen Geschwindigkeiten der Kugel, kann es also dazu kommen, dass diese merklich außerhalb der Spielgrenzen dargestellt wird.
+\begin{figure}
+\centering
+\begin{tikzpicture}
+  [
+    thick,
+    > = latex
+  ]
+
+  \coordinate (a) at (1.7,1.4);
+  \coordinate (b) at (1,0);
+  \coordinate (c) at (0.3,-1.4);
+  \coordinate (ab) at (0,1.4);
+  \coordinate (bb) at (0,0);
+  \coordinate (cb) at (0,-1.4);
+  \coordinate (al) at (3.5,1.4);
+  \coordinate (bl) at (3.5,0);
+  \coordinate (cl) at (3.5,-1.4);
+  \draw[line width=0.5mm]  (0,-2) to (0,2);
+
+  \draw[very thick] (a) circle (0.5);
+  \draw[very thick] (b) circle (0.5);
+  \draw[very thick] (c) circle (0.5);
+
+  \draw (a) to node[midway, above]   {$d_1$} (ab);
+  \draw (b) to node[near end, above] {$d_2$} (bb);
+  \draw (c) to node[near start, above]   {$d_3$} (cb);
+
+  \draw (ab) node[left=1cm] {$t = 1$};
+  \draw (bb) node[left=1cm] {$t = 2$};
+  \draw (cb) node[left=1cm] {$t = 3$};
+
+  \draw (al) node[] {$d_1 > r$};
+  \draw (bl) node[] {$d_2 > r$};
+  \draw (cl) node[] {$d_3 < r$};
+\end{tikzpicture}
+\caption{Erst für $t_3$ wird die Kollision erkannt.}
+\end{figure}
+Grundsätzlich gibt es drei Möglichkeiten dieses Problem zu lösen. Zum einen kann eine Höchstgeschwindigkeit eingeführt werden, um die Bewegung in Pixeln pro Iteration zu verringern. Eine Option ist es die Anzahl an Iterationen zu erhöhen um den selben Effekt zu erreichen. Die Lösung die jedoch nicht nur stochastische Sicherheit bietet ist die kontinuierliche Kollisionskontrolle CCD. 
+
+### Continuous Collision Detection (CCD)
+
+Um sicherzugehen, dass keine Kugeln außerhalb des Spielfeldes angezeigt werden können wurde an den Rändern eine CCD implementiert. Dabei wird berechnet, ob im kommenden Zeitschritt eine Kollision mit der Bande Auftritt, falls dies der Fall ist, wird Position errechnet, welche die Kugel, nach der Richtungsänderung haben wird. Diese Position wird dann in das Attribut \texttt{next} der entsprechenden Kugel gespeichert und im nächsten Zeitschritt als Position der Kugel gesetzt. 
+
+\begin{figure}
+\centering
+\begin{tikzpicture}
+  [
+    thick,
+    > = latex
+  ]
+
+  \coordinate (b) at (2,1.4);
+  \draw[line width=1mm]  (0,-2) to (0,2);
+
+  \draw[very thick] (b) circle (0.5);
+  \draw[->] (b) to (0,0) to node[sloped,above] {} (1.6,-1.12);
+  \draw[dashed, ->] (b) to (0,0) to node[sloped,above] {} (-1.6,-1.12);
+
+  \draw[dotted] (b) to node[above] {$d_1$} (0,1.4) to node[above] {$d_2$} (-1.6,1.4);
+  \draw[dotted] (0,-1.12) to node[below] {$d_2$} (1.6,-1.12);
+\end{tikzpicture}
+\caption{CCD Schaubild}
+\end{figure}
+
+Zur Berechnung ist vor allem der Anteil der Zeit wichtig, nach der die Kollision mit der Bande stattfinden würde. Um die kritische Zeit $t_c$ zu erhalten, gilt: $$ t_c = \text{Bande}_x + r - \frac{\texttt{k}_{\text{next,x}}}{\texttt{k}_{\text{pos,x}} - \texttt{k}_{\text{next,x}}}$$
+Hier ist $t_c$ der Anteil der Zeit an einem Zeitschritt, nach dem die Kollision auftreten würde, wenn die Kugel die Bahn entlang der gestrichelten Linie in Abbildung 2.5 weiter mit Konstanter geschwindigkeit verfolgt. $\texttt{k}_{\text{next,x}}$ ist in diesem Szenario die Hypothetische Position, ohne CCD. Wenn man nun den die $t_c$ kennt kann man die Strecken $d_1$ und $d_2$ bestimmen. Hier ergibt sich 
+\begin{align*}
+d_1 &= t_c \texttt{k}_{\text{v,x}} \\
+d_2 &= (1-t_c)  \texttt{k}_{\text{v,x}} \\
+\texttt{k}_{\text{next,x}} &= \text{Bande}_{\text{x}} + r + (1 - t_c) \texttt{k}_{\text{v,x}} (1 - \mu_R)
+\end{align*}
+
+Der $(1-\mu_R)$ Term, geht aus der Einbeziehung der Rollreibung hervor. Da in jedem Zeitschritt die Geschwindigkeit durch die Reibung verringert wird, muss dies auch bei der Berechnung der zukünftigen Positionen  einbezogen werden.
+
+Die so erhalten \texttt{X}-Koordinate wird als Position für die Kugel \texttt{k} im nächsten Zeitschritt gesetzt. Somit übertritt die Kugel niemals die Grenze des Spielfeldes und der oben genannte Darstellungsfehler wird behoben.
+
 
 # Erklärung der Graphischen Oberfläche
 
