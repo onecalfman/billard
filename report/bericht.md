@@ -284,7 +284,61 @@ Die so erhalten \texttt{X}-Koordinate wird als Position für die Kugel \texttt{k
 
 
 # Erklärung der Graphischen Oberfläche
+ 
+## Queue
 
-# Ergebnisse und Diskussion
 
-# Zusammenfassung
+Die Zentralpunkt der Weißkugel wird nur berücksichtigt, damit der Schlagen zwischen Billardqueue und Weißkugel vereinfacht wird. Deshalb werden nur die Richtung und die Kraft des Billardqueue im Programm kontrolliert.                      
+
+Wie in der Abbildung gezeigt, ist es notwendig, dass das Billardqueue rund um die Weißkugel $360^{\circ}$ drehen kann. Außerdem muss es erfüllt werden, dass das Billardqueue sich verändert, wenn die Richtung der Zielkugel wechselt wird. Dieses stellt sicher, dass das Billardqueue in der Richtung bewegt. Deshalb wird die drehende Winkel des Billardqueue bestimmt, wenn die drehende Winkel der Zielkugel festgelegt wird. Im Folgend wird das Festlegen der Winkel von der Zielkugel beschrieben.
+
+Grundlegende Änderung der Zielkugel wird in der Abbildung darstellt. Da es einstellt wird, dass die Zielkugel der Bewegung der Maus entspricht, werden die Länge und der Winkel der Zielkugel im Gegensatz zur Weißkugel geändert. Die Position der Zielkugel wird bestimmt und danach die Differentwerte zwischen Weißkugel und Zielkugel werden auch bekommen. 
+
+\begin{align*}
+\tan(\alpha) &= \frac{\text{Gegenkathete}}{\text{Ankathete}} \\
+\alpha &= \arccos \frac{\text{Ankathete}}{\text{Hypotenuse}}
+\end{align*}
+
+Nach Formel wird der Winkel durch die beiden Differentwerte berechnet. Aber es ist zu beachten, dass es Problem mit $\tan(\alpha)$ bei $\alpha = 90^{\circ}$ gibt. Wenn $\alpha$ als $90^{\circ}$ gleich, wird Ankathete gleich $0$. Nach dem Prinzip, dass der Nenner nicht gleich $0$ ist, geht das Programm schief. Deswegen wird der Winkel durch Formel 2 berechnet. Die Richtungen des Billardqueue und der Zielkugel können daher eingestellt und berechnet werden.
+
+
+
+Die Kraft des Billardsqueue wird durch die Buttons in zwei Formen zeigt, wie in der Abbildung dargestellt.
+
+
+Wenn das Button "Distanzenkraft" gedrückt wird, wird die Größe der Kraft proportional entsprechend der Distanzen zwischen Weißkugel und Zielkugel  geändert. Wenn das Button "Zeitenkraft" gedrückt wird, wird die Größe der Kraft mit der Zeit proportional hin und her geändert.
+
+
+Im Programm ist es ersichtlich, dass die Größe der Kraft in  eingestellter Umfang durch die rote Balkenänderung intuitiv dargestellt wird. Die niedrigste Grenze wird gestellt, um Gleitreibung zu vermeiden, und die hochste Grenze wird gestellt, um übermäßige Kollision zu vermeiden.
+
+#### Spieler_Name
+
+
+Wann das entsprechende Button in der Abbildung gedrückt wird, wird die Inputbox angezeigt, um den Name der Spieler, der man nennen möchte, einzugeben. Ansonsten wird der Standardname angezeigt.
+
+#### Tischplatte 
+
+Auf der Tischplatte liegen 6 schwarzen Löcher und 16 Kugeln. Die Kugeln sind mit nummern und Farben gekennzeichnet. Die statistische Daten bzw. die Maße und Positionen der Kugeln sind In einem bestimmten Verhältnis standardisiert.
+
+#### Spielereihe
+ 
+In jeder Runde sollte nur ein Spieler schlagen. Die Stelle des gelben Kugel zeigt den Spieler, der in dieser Runde schlagen sollte. Wenn die Reihe des Spielers gewechselt wird, entsteht der Hinweis „Spieler austaschen ”.
+
+#### Zugehörigkeit 
+
+Nachdem ein Spieler erst den Kugeln ins Loch geschlägt, wird die Zugehörigkeit bestimmt. In einem Spiel sollte die bestimmte Zugehörigkeit nicht mehr verändert werden. Der Text auf gelbem Hintergrund zeigt, welche Kugeln(vollfarbe Kuglen oder Halbfarbe Kuglen) die unten gezeigten Spieler schlagen sollten.
+
+#### Kugeln in löcher
+
+Das unter der Spielereihe stehenden Feld zeigt, welche Kuglen in diesem Augenblick in löcher sein, d.h. nicht in dem Game sind.
+
+## Gameover
+
+Wenn ein Spieler den schwarzen Kugel zur falschen Zeit ins Loch geschlagen hat, wird der andere Spieler den Winner. In diesem Moment beendet das Spiel und taucht diesen HInweis auf.
+
+
+## Winner
+
+
+Wenn ein Spieler das Spiel gewinnt, tauscht bald diesen Hinweis auf.
+
