@@ -27,6 +27,7 @@ header-includes:
   - \setcounter{secnumdepth}{3}
   - \setcounter{tocdepth}{4}
   - \usepackage{graphicx}
+  - \usepackage{multicol}
 ---
 
 # Einführung
@@ -38,6 +39,7 @@ header-includes:
 ![Billardtisch](images/aufgabe.png)
 
 Billiard ist ein Geschicklichkeitsspiel bei dem Kugeln mit Hilfe eines Stabes, der Queue genannt wird, in Löcher gestossen werden. Dabei werden die 15 farbigen Kugeln nicht direkt mit dem Stab angespielt. Vielmehr spielt man mit dem Queue den weißen Spielball, der dann die anderen  Kugeln so anstossen muss, dass diese in die Löcher fallen. Bei der von uns betrachteten Variante dem Poolbillard muss die schwarze 8 zuletzt eingelocht werden.
+
 
 ## Stoss
 
@@ -132,7 +134,7 @@ Da die Ausgabe als 2D Grafik erfolgt, ist es naheliegend auch ein 2-Dimensionale
 
 Die aktuelle Position der Kugel lässt sich in x, bzw y Richtung lässt sich also durch $x = v * t + x_0$ berechnen. Da in unserem die einzige wirkende Beschleunigung die konstante Rollreibung ist, lässt sich diese einfach als abnehmende Geschwindigkeit darstellen. Durch die iterative und diskrete Natur von Computerprogrammen macht es Sinn die aktuelle Position $\vec{p}\;$ anhand der zuletzt errechneten zu bestimmen.
 $$ \vec{p}_{t} = \vec{p}_{t-1} + \vec{v}_{t} $$
-Hier wird dann noch in jedem Iterationsschritt die Geschwindigkeit um den durch die Rollreibung vorgegebenen Faktor verringert. $\vec{v}_t = \vec{v}_{t-1} \cdot (1 - \mu_R) \;$.
+Hier wird dann noch in jedem Iterationsschritt die Geschwindigkeit um den durch die Rollreibung vorgegebenen Faktor verringert. $$\vec{v}_t = \vec{v}_{t-1} \cdot (1 - \mu_R) \;$$
 
 ### Kollision mit der Bande
 
@@ -157,7 +159,6 @@ Hier wird dann noch in jedem Iterationsschritt die Geschwindigkeit um den durch 
 \end{tikzpicture}
 \caption{Kollision mit der Bande}
 \end{figure}
-
 Das nächste physikalische Problem ist die Kollision von Kugeln und Bande. Hier handelt es sich wie eingangs erwähnt um einen einen elastischen Stoss. Da die Bande unbeweglich und gerade ist gilt, dass sich nur der Anteil der Kraft im Vorzeichen ändert, welcher Senkrecht zur Wand steht. Demnach wäre die Geschwindigkeit nach der Kollision in Abbildung 2.2  $$ v_0 = \begin{bmatrix} - v_{x,0} \\ v_{y,0} \end{bmatrix}, \quad v_1 = \begin{bmatrix} - v_{x,0} \\ v_{y,0} \end{bmatrix} $$
 
 ## Informatik
@@ -290,7 +291,11 @@ Die so erhalten \texttt{X}-Koordinate wird als Position für die Kugel \texttt{k
 
 Die Zentralpunkt der Weißkugel wird nur berücksichtigt, damit der Schlagen zwischen Billardqueue und Weißkugel vereinfacht wird. Deshalb werden nur die Richtung und die Kraft des Billardqueue im Programm kontrolliert.                      
 
+![](images/queue1.png)
+
 Wie in der Abbildung gezeigt, ist es notwendig, dass das Billardqueue rund um die Weißkugel $360^{\circ}$ drehen kann. Außerdem muss es erfüllt werden, dass das Billardqueue sich verändert, wenn die Richtung der Zielkugel wechselt wird. Dieses stellt sicher, dass das Billardqueue in der Richtung bewegt. Deshalb wird die drehende Winkel des Billardqueue bestimmt, wenn die drehende Winkel der Zielkugel festgelegt wird. Im Folgend wird das Festlegen der Winkel von der Zielkugel beschrieben.
+
+![](images/queue2.png)
 
 Grundlegende Änderung der Zielkugel wird in der Abbildung darstellt. Da es einstellt wird, dass die Zielkugel der Bewegung der Maus entspricht, werden die Länge und der Winkel der Zielkugel im Gegensatz zur Weißkugel geändert. Die Position der Zielkugel wird bestimmt und danach die Differentwerte zwischen Weißkugel und Zielkugel werden auch bekommen. 
 
@@ -305,22 +310,29 @@ Nach Formel wird der Winkel durch die beiden Differentwerte berechnet. Aber es i
 
 Die Kraft des Billardsqueue wird durch die Buttons in zwei Formen zeigt, wie in der Abbildung dargestellt.
 
+![](images/kraft_buttons.png)
 
-Wenn das Button "Distanzenkraft" gedrückt wird, wird die Größe der Kraft proportional entsprechend der Distanzen zwischen Weißkugel und Zielkugel  geändert. Wenn das Button "Zeitenkraft" gedrückt wird, wird die Größe der Kraft mit der Zeit proportional hin und her geändert.
+Wenn der Button "Distanzenkraft" gedrückt wird, wird die Größe der Kraft proportional entsprechend der Distanzen zwischen Weißkugel und Zielkugel  geändert. Wenn das Button "Zeitenkraft" gedrückt wird, wird die Größe der Kraft mit der Zeit proportional hin und her geändert.
 
+![](images/kraft_anzeige.png)
 
 Im Programm ist es ersichtlich, dass die Größe der Kraft in  eingestellter Umfang durch die rote Balkenänderung intuitiv dargestellt wird. Die niedrigste Grenze wird gestellt, um Gleitreibung zu vermeiden, und die hochste Grenze wird gestellt, um übermäßige Kollision zu vermeiden.
 
 #### Spieler_Name
 
+![](images/spieler_namen_button.png)
 
 Wann das entsprechende Button in der Abbildung gedrückt wird, wird die Inputbox angezeigt, um den Name der Spieler, der man nennen möchte, einzugeben. Ansonsten wird der Standardname angezeigt.
 
 #### Tischplatte 
 
+![](images/tisch.png)
+
 Auf der Tischplatte liegen 6 schwarzen Löcher und 16 Kugeln. Die Kugeln sind mit nummern und Farben gekennzeichnet. Die statistische Daten bzw. die Maße und Positionen der Kugeln sind In einem bestimmten Verhältnis standardisiert.
 
-#### Spielereihe
+#### Spielereihe \
+
+![](images/spieler.png)
  
 In jeder Runde sollte nur ein Spieler schlagen. Die Stelle des gelben Kugel zeigt den Spieler, der in dieser Runde schlagen sollte. Wenn die Reihe des Spielers gewechselt wird, entsteht der Hinweis „Spieler austaschen ”.
 
@@ -334,11 +346,13 @@ Das unter der Spielereihe stehenden Feld zeigt, welche Kuglen in diesem Augenbli
 
 ## Gameover
 
+![](images/reset.png)
+
 Wenn ein Spieler den schwarzen Kugel zur falschen Zeit ins Loch geschlagen hat, wird der andere Spieler den Winner. In diesem Moment beendet das Spiel und taucht diesen HInweis auf.
 
 
 ## Winner
 
+![](images/gameover.png)
 
 Wenn ein Spieler das Spiel gewinnt, tauscht bald diesen Hinweis auf.
-
