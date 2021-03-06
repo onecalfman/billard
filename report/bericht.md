@@ -19,15 +19,18 @@ header-includes:
   - \usepackage[T1]{fontenc}
   - \usepackage{tikz-uml}
   - \usepackage{tikz}
+  - \usepackage{booktabs}
   - \usetikzlibrary{calc}
   - \usetikzlibrary{arrows,decorations.markings}
   - \usepackage{svg}
   - \usepackage{wrapfig}
   - \usepackage{float}
+  - \usetikzlibrary{patterns}
   - \setcounter{secnumdepth}{3}
   - \setcounter{tocdepth}{4}
   - \usepackage{graphicx}
   - \usepackage{multicol}
+  - \tikzset{cross/.style={cross out, draw, minimum size=2*(#1-\pgflinewidth), inner sep=0pt, outer sep=0pt}}
 ---
 
 # Einführung
@@ -160,6 +163,101 @@ Hier wird dann noch in jedem Iterationsschritt die Geschwindigkeit um den durch 
 \caption{Kollision mit der Bande}
 \end{figure}
 Das nächste physikalische Problem ist die Kollision von Kugeln und Bande. Hier handelt es sich wie eingangs erwähnt um einen einen elastischen Stoss. Da die Bande unbeweglich und gerade ist gilt, dass sich nur der Anteil der Kraft im Vorzeichen ändert, welcher Senkrecht zur Wand steht. Demnach wäre die Geschwindigkeit nach der Kollision in Abbildung 2.2  $$ v_0 = \begin{bmatrix} - v_{x,0} \\ v_{y,0} \end{bmatrix}, \quad v_1 = \begin{bmatrix} - v_{x,0} \\ v_{y,0} \end{bmatrix} $$
+
+### Kollision von zwei Kugeln
+
+Wie oben bereits angeführt, ist das Zusammentreffen von zwei Kugeln ein elastischer Stoss. Für diesen gilt für dein eindimensionalen Fall folgende Gleichung. $$ v_{a1} m_{a1} + v_{b1} m_{b1} = v_{a2} m_{a2} + v_{b2} m_{b2}$$ In betrachteten Fall vereinfacht sich die Gleichung weiter, da alle Kugeln die selbe Masse haben, damit ergibt sich.  $$ v_{a1} + v_{b1} = v_{a2} + v_{b2} $$ Dieser Zusammenhang sich allerdings nicht direkt auf den Zweidimensionalen Fall Anwenden. Dieser kann jedoch so vereinfacht werden, dass die obige Formel zumindest indirekt zur Berechnung verwendet werden kann. Um eine effiziente Berechnung im Computer zu gewährleisten, sollte auch möglichst auf den Einsatz von trigonometrischen Funktionen verzichtet werden, da diese nach eigenen Tests mit einem mehr an Rechenaufwand verbunden sind. Eine überprüfung von Verschiedenen Rechenoperationen ergab folgendes Ergebnis:\footnote{Der für den Test verwendete Code findet sich im Anhang. Als Compiler wurde gcc, verwendet, da kein ersatz für die C++-crono library in Borland gefunden werden konnte.}
+
+\begin{tabular}{llllll}
+\toprule 
+ Operation  & Zeit für 10e8 Wiederholungen  in $s$ \\
+ \midrule
+ plus       & 0.1681851                     \\
+ minus      & 0.1604299                     \\
+ mult       & 0.1584505                     \\
+ div        & 0.3010148                     \\
+ sqrt       & 0.2361831                     \\
+ sin        & 1.1046720                     \\
+ cos        & 0.9211685                     \\
+ tan        & 2.6617312                     \\
+ atan       & 2.5101218                     \\
+ exp        & 0.5926420                     \\
+\bottomrule
+\end{tabular}
+
+Demnach braucht eine $\sin()$ Operation fast 7x mehr Zeit, als eine Multiplikation. Da die Geschwindigkeiten und Positionen der Kugeln bereits Vektoren sind, ist es Sinnvoll auch die Berechnung der Geschwindigkeiten nach dem Stoss durchzuführen.
+Hierzu wird zunächst ein Vektor bestimmt und normiert, welcher vom Mittelpunkt von Kugel 1 zu Kugeln 2 Zeigt. 
+\begin{align*}
+\vec{n} &= \begin{bmatrix} k2_x \\ k2_y \end{bmatrix} - \begin{bmatrix} k1_x \\ k1_y \end{bmatrix} \\
+\hat{n} &= \frac{\vec{n}}{||\vec{n}||}\\
+\end{align*}
+Die Geschwindigkeiten der Kugeln werden dann auf den Normalenvektor projiziert. Hieraus wird dann die Differenz der Geschwindigkeiten normal zum Differenzvektor der Kugeln ermittelt.
+\begin{align*}
+\Delta v = \hat{n} \bullet \vec{k2_v} - \hat{n} \bullet \vec{k1_v}
+\end{align*}
+\begin{tikzpicture}
+[
+	  > = latex,
+    very thick
+]
+
+  \coordinate (k1) at (-2, -1);
+  \coordinate (k2) at (1, 2);
+
+  \coordinate (t1) at (1, -1);
+  \coordinate (t2) at (-2, 2);
+
+  \coordinate (v1) at (-3, 3);
+  \coordinate (v2) at (-2, 3.3);
+
+  \draw (k1) node[below right] {$k1$} circle (2.1);
+  \draw (k2) node[below right] {$k2$} circle (2.1);
+
+  \draw[->, thick] (k1) to node[near start, below right] {$\vec{n}$} (k2);
+  %\draw[->] (k1) to  ($(k2) - (2,2)$);
+
+  \draw[->, thick] (t1) to node[at start, above right] {$\vec{t}$} (t2);
+
+  \draw[->] (k1) to node[below left, near end] {$\vec{v1}$} (v1);
+  \draw[->] (k2) to node[below left, near end] {$\vec{v2}$} (v2);
+
+\end{tikzpicture}
+\begin{tikzpicture}
+[
+	  > = latex,
+    very thick
+]
+
+  \coordinate (k1) at (-2, -1);
+  \coordinate (k2) at (1, 2);
+
+  \coordinate (t1) at (1, -1);
+  \coordinate (t2) at (-2, 2);
+
+  \coordinate (v1) at (-3, 3);
+  \coordinate (v2) at (-2, 3.3);
+
+  \coordinate (p1) at (-0.5, 0.5);
+  \coordinate (p2) at (0.15, 1.15);
+
+
+  \draw[->, thick] (k1) to node[near start, below right] {$\vec{n}$} (k2);
+
+  \draw[->] (k1) to node[below left, near end] {$\vec{v1}$} (v1);
+  \draw[->] (k2) to node[above right, near end] {$\vec{v2}$} (v2);
+
+  \draw[dotted, thick] (v1) to (p1);
+  \draw[dotted, thick] (v2) to (p2);
+
+\end{tikzpicture}
+
+Die so erhaltene Differenz der Geschwindigkeiten kann verwendet werden um die Finale Geschwindigkeit der beiden Kugeln zu errechnen. Diese ergibt sich dann zu
+\begin{align*}
+k1_{v2} &= k1_{v1} + \Delta v \circ \hat{n} \\
+k2_{v2} &= k2_{v1} - \Delta v \circ \hat{n}
+\end{align*}
+Dadurch, dass der Anteil in der normalen Richtung direkt zur vorherigen Geschwindigkeit addiert, bzw subtrahiert wird, ist eine separate Berechnung der Geschwindigkeiten in tangentiale Richtung nicht mehr notwendig. Auch unsere anfängliche Bedingung, dass die Summe der Geschwindigkeiten konstant bleiben muss ist somit erfüllt.
+
 
 ## Informatik
 
@@ -338,17 +436,17 @@ In jeder Runde sollte nur ein Spieler schlagen. Die Stelle des gelben Kugel zeig
 
 #### Zugehörigkeit 
 
-Nachdem ein Spieler erst den Kugeln ins Loch geschlägt, wird die Zugehörigkeit bestimmt. In einem Spiel sollte die bestimmte Zugehörigkeit nicht mehr verändert werden. Der Text auf gelbem Hintergrund zeigt, welche Kugeln(vollfarbe Kuglen oder Halbfarbe Kuglen) die unten gezeigten Spieler schlagen sollten.
+Nachdem ein Spieler erst den Kugeln ins Loch gestossen, wird die Zugehörigkeit bestimmt. In einem Spiel sollte die bestimmte Zugehörigkeit nicht mehr verändert werden. Der Text auf gelbem Hintergrund zeigt, welche Kugeln(vollfarbe Kugeln oder Halbfarbe Kugeln) die unten gezeigten Spieler schlagen sollten.
 
 #### Kugeln in löcher
 
-Das unter der Spielereihe stehenden Feld zeigt, welche Kuglen in diesem Augenblick in löcher sein, d.h. nicht in dem Game sind.
+Das unter der Spielereihe stehenden Feld zeigt, welche Kugeln in diesem Augenblick in löcher sein, d.h. nicht in dem Game sind.
 
 ## Gameover
 
 ![](images/reset.png)
 
-Wenn ein Spieler den schwarzen Kugel zur falschen Zeit ins Loch geschlagen hat, wird der andere Spieler den Winner. In diesem Moment beendet das Spiel und taucht diesen HInweis auf.
+Wenn ein Spieler den schwarzen Kugel zur falschen Zeit ins Loch geschlagen hat, wird der andere Spieler den Winner. In diesem Moment beendet das Spiel und taucht diesen Hinweis auf.
 
 
 ## Winner
@@ -356,3 +454,21 @@ Wenn ein Spieler den schwarzen Kugel zur falschen Zeit ins Loch geschlagen hat, 
 ![](images/gameover.png)
 
 Wenn ein Spieler das Spiel gewinnt, tauscht bald diesen Hinweis auf.
+
+# Simulation
+
+Nach dem in den vorangegangenen Kapiteln die zugrundeliegenden physikalischen Gesetze und ihre Umsetzung in ein Computerprogramm behandelt wurden, wird es im letzten Abschnitt um den Aspekt der Spielbarkeit gehen. Ein spiel, dass die physikalische Realität möglichst korrekt abbildet, sorgt nicht notwendigerweise für ein Angenehmes Spielerlebnis. In unserem Fall ist die Stellschraube an der wir drehen können vor allem die Reibung. Sie bestimmt, wie lange die Kugeln in Bewegung bleiben und damit ob ein Spieler lange warten muss, oder das Gefühl hat die Kugeln würden zu schnell liegen bleiben. Im folgenden werden die Beobachtungen aus einigen verschiedenen mathematischen Darstellungen der Verlangsamung der Kugel besprochen. Dabei soll untersucht werden, ob eine realitätsnahe Representation als angenehm empfunden wird, oder ob eine andere Darstellung als besser wahrgenommen wird.
+
+## Lineare Darstellung
+Die einfachste Mathematische Funktion mit der die Reibung dargestellt werden kann. Hierbei wird die Reibung einfach für jede Iteration um einen konstanten Betrag reduziert, bis die Kugel zum Stillstand kommt.
+$$v(t) = v_0 - c * t, \quad 0 \leq v$$
+
+## Quadratische Darstellung
+Eine weitere Möglichkeit ist die Darstellung als Quadratische Funktion. Dabei werden die Kugeln zunächst nur wenig verlangsamt, bremsen aber mit ansteigenden Iterationen immer Schneller ab.
+$$v(t) = v_0 - c * (c_1 t)^2, \quad 0 \leq v$$
+Hierbei ist es angebracht, die Zeit mit einer konstante $0 < c_1 \ll 1$ zu multiplizieren um zu verhindern, dass die Kugeln bereits nach wenigen Durchlaufen stehen bleibt. 
+
+## Exponentaldarstellung
+# Fazit
+
+# Quellen
