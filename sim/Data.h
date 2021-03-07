@@ -1,8 +1,12 @@
 #include "Plan.h"
 
 double baseline = 500.0;
-double spacing_X = 60 * 0.85;
-double spacing_Y = 31;
+double spacing_Y = 35;
+double spacing_X = spacing_Y * 2 * 0.85;
+
+TColor Violett = RGBSkala(100.0,75.3,79.6),
+TColor Orange = RGBSkala(100.0,64.7,0.0),
+TColor Braun = RGBSkala(60.0,39.6,8.2),
 
 double kugeln_X[16] =  {
 	-635.0,
@@ -48,17 +52,19 @@ TColor colors[16] = {
 	Blau,
 	Hellrot,
 	Violett,
-	Gelb,
+	Orange,
 	Gruen,
-	Rot,
+	Braun,
 	Schwarz,
 	Gelb,
 	Blau,
 	Hellrot,
 	Violett,
-	Gelb,
+	Orange,
 	Gruen,
-	Rot
+	Braun
 };
 
 
+double loecher_X[6] =  {-1210.0 , -1210.0 , 1210.0 , 1210.0 ,    0.0 ,   0.0};
+double loecher_Y[6] =  {-575.0  , 575.0   , -575.0 , 575.0  , -575.0 , 575.0};
