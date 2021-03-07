@@ -4,9 +4,9 @@ double baseline = 500.0;
 double spacing_Y = 35;
 double spacing_X = spacing_Y * 2 * 0.85;
 
-TColor Violett = RGBSkala(100.0,75.3,79.6),
-TColor Orange = RGBSkala(100.0,64.7,0.0),
-TColor Braun = RGBSkala(60.0,39.6,8.2),
+TColor Lila = RGBSkala(100.0,75.3,79.6);
+TColor Orange = RGBSkala(100.0,64.7,0.0);
+TColor Braun = RGBSkala(60.0,39.6,8.2);
 
 double kugeln_X[16] =  {
 	-635.0,
@@ -51,7 +51,7 @@ TColor colors[16] = {
 	Gelb,
 	Blau,
 	Hellrot,
-	Violett,
+	Lila,
 	Orange,
 	Gruen,
 	Braun,
@@ -59,7 +59,7 @@ TColor colors[16] = {
 	Gelb,
 	Blau,
 	Hellrot,
-	Violett,
+	Lila,
 	Orange,
 	Gruen,
 	Braun
