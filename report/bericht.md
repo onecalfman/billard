@@ -55,7 +55,8 @@ Im makroskopischen Bereich ist der elastische Stoss nur als Idealisierung zu bet
 
 Im gegensatz zu den Kugeln, welche aus Phenoplast hergestellt werden, besteht der Bandenspiegel um den Tisch herum aus vulkanisierten Elastomeren, welche dazu dienen den Energieverlust des Balles gering zu halten. Je nach den gewählten Materialien unterscheidet sich das Effet verhalten des Balles. In unserem Fall gehen wir von einer harten und dichten Bande aus. Der Stoss kann so als rein elastisch betrachtet werden.
 
-## Rollreibung
+## Reibung
+### Rollreibung
 
 Das zweite physikalische Phänomen, welches beim Billardtisch auftaucht ist die Rollreibung der Kugel auf dem Tisch beziehungsweise Tuch. Die Rollreibung lässt sich durch die nachfolgende Gleichung bestimmen.
 \begin{align*}
@@ -96,6 +97,17 @@ Die Rollreibung entsteht durch die Verformung des Untergrundes durch das rollend
 
 Die Verformung des Untergrundes besteht aus einem Einsinken des Körpers und einer Anhäufung von Material vor dem Körper selbst. Dies ist Schematisch in der obigen Skizze dargestellt. Ein Weicherer untergrund führt zu mehr Einsinken und damit auch zu mehr Material in der Bahn des Rollkörpers. Wenn die tiefe des Einsinkens bekannt ist lässt sich hieraus auch der Rollwiderstandskoeffizient zu $c_R  = \frac{d}{R}$ bestimmen. Hierbei ist $d$ die  Strecke zwischen der Rotationsachse des Rollkörpers und der Stelle, an der sich dessen Außenradius mit der weitergedachten Höhe des Untergrundes schneidet. Da beim Billard entscheidend ist, dass die Rollreibung möglichst gering ist, werden Billardtische in der Regel aus Schiefer gefertigt, da dieser Stein besonders spröde ist. Auch Tische mit Holz oder Stahlplatten werden gefertigt. Der Tisch wird dann mit einem Schweren Tuch bespannt
 
+### Luftwiederstand
+Die zweite Art von Reibung welche eine Rolle für unser Problem spielt, ist der wiederstand der Luft. Dieser lässt sich einfach über den folgenden Zusammenhang errechnen.
+\begin{align*}
+F_{L}&=\frac{1}{2} \rho v^{2} C_{D} A\\
+F_{L}&=\text{Luftwiederstand} \\
+\rho &= \text{Dichte}\\
+v &= \text{relative Geschwindigkeit}\\
+C_{L} &= \text{Reibungskoeffizient}\\
+A &= \text{Querschnittsfläche} \\
+\end{align*}
+
 # Grundlagen
 
 In diesem Kapitel werden die physikalischen Gesetzmäßigkeiten die zur Simulation des Spiels nötig sind erklärt, so wie die Schritte die Nötig sind um sie in einer numerischen Simulation einzusetzen.
@@ -135,9 +147,11 @@ Da die Ausgabe als 2D Grafik erfolgt, ist es naheliegend auch ein 2-Dimensionale
 \caption{Koordinaten und Geschwin- digkeiten von Kugeln}
 \end{figure}
 
-Die aktuelle Position der Kugel lässt sich in x, bzw y Richtung lässt sich also durch $x = v * t + x_0$ berechnen. Da in unserem die einzige wirkende Beschleunigung die konstante Rollreibung ist, lässt sich diese einfach als abnehmende Geschwindigkeit darstellen. Durch die iterative und diskrete Natur von Computerprogrammen macht es Sinn die aktuelle Position $\vec{p}\;$ anhand der zuletzt errechneten zu bestimmen.
+In unserem Fall werden die Geschwindigkeiten und Positionen der Kugeln als Vektoren dargestellt. Im unserem Fall ist es Sinnvoll die aktuelle Position nur aus der vorherigen Position zu berechnen. Weil sich die Geschwindigkeit $\vec{v}$ durch die Kollision mit andere Kugeln ändern kann, ist eine Berechnung der aktuellen Position $\vec{p}$ durch einen Funktionalen zusammenhang wie $\vec{p}(t) = \frac{1}{2}\vec{a^2} + \vec{v} * t + \vec{p}_0$ nicht ohne weiteres möglich. Daher wird die Position in der vorliegenden Iteration aus der vorherigen Berechnet.
 $$ \vec{p}_{t} = \vec{p}_{t-1} + \vec{v}_{t} $$
-Hier wird dann noch in jedem Iterationsschritt die Geschwindigkeit um den durch die Rollreibung vorgegebenen Faktor verringert. $$\vec{v}_t = \vec{v}_{t-1} \cdot (1 - \mu_R) \;$$
+Die Änderung der Geschwindigkeit wird dann separat ermittelt. Hierbei wird die Verlangsamung durch Rollreibung und Luftwiederstand zunächst nur durch die folgende Formel angenähert:
+$$\vec{v}_t = \vec{v}_{t-1} \cdot (1 - \mu) \;$$
+Der Parameter $\mu$ soll die verschiedenen Konstanten zunächst annähern.
 
 ### Kollision mit der Bande
 
@@ -457,18 +471,29 @@ Wenn ein Spieler das Spiel gewinnt, tauscht bald diesen Hinweis auf.
 
 # Simulation
 
-Nach dem in den vorangegangenen Kapiteln die zugrundeliegenden physikalischen Gesetze und ihre Umsetzung in ein Computerprogramm behandelt wurden, wird es im letzten Abschnitt um den Aspekt der Spielbarkeit gehen. Ein spiel, dass die physikalische Realität möglichst korrekt abbildet, sorgt nicht notwendigerweise für ein Angenehmes Spielerlebnis. In unserem Fall ist die Stellschraube an der wir drehen können vor allem die Reibung. Sie bestimmt, wie lange die Kugeln in Bewegung bleiben und damit ob ein Spieler lange warten muss, oder das Gefühl hat die Kugeln würden zu schnell liegen bleiben. Im folgenden werden die Beobachtungen aus einigen verschiedenen mathematischen Darstellungen der Verlangsamung der Kugel besprochen. Dabei soll untersucht werden, ob eine realitätsnahe Representation als angenehm empfunden wird, oder ob eine andere Darstellung als besser wahrgenommen wird.
+Nach dem in den vorangegangenen Kapiteln die zugrundeliegenden physikalischen Gesetze und ihre Umsetzung in ein Computerprogramm behandelt wurden, wird im letzten Abschnitt untersucht wie die Darstellung der Reibung verbessert werden kann und welchen Einfluss eine Variation der Massen von Verschiedenen Kugeln haben kann.
 
-## Lineare Darstellung
-Die einfachste Mathematische Funktion mit der die Reibung dargestellt werden kann. Hierbei wird die Reibung einfach für jede Iteration um einen konstanten Betrag reduziert, bis die Kugel zum Stillstand kommt.
-$$v(t) = v_0 - c * t, \quad 0 \leq v$$
+## Reibung
+wie in Kapitel 2.1.1 bereits erwähnt wurde hier die Verlangsamung der Kugel durch die Rollreibung und den Luftwiederstand nur angenähert. Es handelt sich bei der verwendete Formel nicht um einen physikalisch Korrekte representation der tatsächlichen Vorgänge. Dennoch liefert diese simple Rechnung zumindest für hohe Geschwindigkeiten eine überzeugende Näherung. Es kommt jedoch bei kleinen Geschwindigkeiten zu einem Unerwartet langen Rollen der Kugeln. Dies widerspricht jedoch sowohl der Erwartungshaltung der Spieler, als auch der beobachtbaren Realität. 
 
-## Quadratische Darstellung
-Eine weitere Möglichkeit ist die Darstellung als Quadratische Funktion. Dabei werden die Kugeln zunächst nur wenig verlangsamt, bremsen aber mit ansteigenden Iterationen immer Schneller ab.
-$$v(t) = v_0 - c * (c_1 t)^2, \quad 0 \leq v$$
-Hierbei ist es angebracht, die Zeit mit einer konstante $0 < c_1 \ll 1$ zu multiplizieren um zu verhindern, dass die Kugeln bereits nach wenigen Durchlaufen stehen bleibt. 
+Um eine bessere Darstellung der Reibung zu erreichen wurden nun die beiden Reibungseffekte zunächst getrennt Betrachtet. Grundsätzlich gilt, dass der Einfluss des Luftwiederstandes quadratisch von der Geschwindigkeit Abhängig ist. Damit ist zu erwarten, dass für hohe Geschwindigkeiten der Anteil des Luftwiederstandes an der Verlangsamung größer ist, währen für kleine Geschwindigkeiten eher die Rollreibung ausschlaggebend für das Rollverhalten ist.
 
-## Exponentaldarstellung
+### Verhalten bei Rollreibung
+Wenn die Reibung als reine Rollreibung -- also geschwindigkeitsunabhängig -- angenommen wird kommt folgende Vorschrift für die Berechnung zum einsatz. $$\vec{v_t} = \vec{v}_{t-1} - (1-\mu)\frac{\vec{v}_{t-1}}{||\vec{v}_{t-1}||}$$
+Hier lässt sich beobachten, dass die Kugeln, wenn sie große Geschwindigkeiten erreichen, scheinbar gar nicht abgebremst werden. Wenn man die Weisse Kugel mit maximaler Kraft anstösst, dauert es 20-25 Sekunden, bis die Kugeln wieder zum stillstand kommen. Diese Zeitspanne übersteigt sowohl, die Dauer die zum Spielen angenehm ist, als auch die Tatsächliche Zeit, welche bei einem realen Billardstoss vergeht, Diese Beträgt etwa 6-9 Sekunden
+^[Aufgrund von mangelnder Literatur wurde dieser Wert anhand des Spiels ["Shane Van Boening vs Alex Pagulayan | 2018 US Open 8-Ball Championship Final"](https://www.youtube.com/watch?v=-FHz4kf_cus?t=278) gemessen.]
+
+### Verhalten bei Luftwiederstand
+Die von der Geschwindigkeit abhängige Reibung mit der Luft, wird hier wieder durch die in Kapitel 2.1.1 verwendete Formel angenähert.
+$$\vec{v}_t = \vec{v}_{t-1} \cdot (1 - \mu)$$
+Da wir davon ausgehen, dass für kleine Geschwindigkeiten die lineare Rollreibung ausschlaggebend sein wird, versuchen wir den quadratischen Zusammenhang durch eine rekursiv definierte exponentiale Folge abzubilden. Diese lässt sich deutlich einfacher Berechnen. Es wäre also für die Berechnung einfacher, wenn sich diese Konstruktion als hinreichende Näherung herausstellt.
+
+Qualitativ zeigt sich, dass die Kugeln zunächst so verlangsamt werden, wie man es auch von realen Billardkugeln erwarten würde, allerdings rollen die Kugeln am unnatürlich lange aus. Da die Geschwindigkeit durch den obigen zusammenhang nicht null werden kann, wurde hier mit einer Geschwindigkeitsschwelle gearbeitet, ab der davon ausgegangen wird, dass sich die entsprechende Kugel nicht mehr bewegt. Es gilt also $|\vec{v}| < s \rightarrow \vec{v} = 0$. Die Messung der Zeit ergibt für dies Darstellung der Reibung ca. 14 Sekunden. Dies entspricht eher den erwarteten 6-9 Sekunden, als die rein lineare Reibung, ist aber nicht zufriedenstellend.
+
+### Kombination der Effekte
+Es liegt nahe die beiden Reibungen zu kombinieren. Dies entspricht eher der realen Situation. Auch die Kombination aus dem schnellen abbremsen am Anfang bei der geschwindigkeitsabhängig Reibung mit der größeren Verlangsamung am Ende bei der linearen Darstellung verspricht ein insgesamt schnelleres abbremsen. In unserem Fall wechselt sich also die Dominanz der Reibungen ab. Dies lässt sich auch experimentell zeigen [@Carty_1957]. Die am einfachsten zu implementierende Lösung ist in diesem Fall beide Reibungseffekte zu Berechnen und die Betragsmäßig größere Verlangsamung zu verwenden. 
+$$v_t = \min \left\{ \vec{v}_{t-1} \cdot (1 - \mu), \quad \vec{v}_{t-1} - (1-\mu)\frac{\vec{v}_{t-1}}{||\vec{v}_{t-1}||}\right\}$$
+
 # Fazit
 
 # Quellen
