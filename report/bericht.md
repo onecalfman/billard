@@ -19,15 +19,16 @@ author:
  - Jonas Walkling
 lang: de
 title: Simulation eines Billardspiels
+titlepage: false
 bibliography: ref.bib
 link-citations: true
 tables-no-page-break: true
 header-includes:
   - \def \AUTHOR     {Xiao Wang, Liucheng Kang, Bin Zouh, Jonas Walkling} 
   - \def \TITLE      {Simulation eines Billiardspiels}
-  - \def \TYPE       {Diplomarbeit/Studienarbeit/Masterarbeit/Bachelorarbeit/Projektarbeit}
-  - \def \MATRIKELNR {1234567}
-  - \def \BETREUER   {Ms. S. Vor- und Zuname}
+  - \def \TYPE       {Studienarbeit}
+  - \def \MATRIKELNR {}
+  - \def \BETREUER   {Ms. S. Mohammed Ishaoui}
   - \usepackage{scrlayer-scrpage}
   - \setheadsepline[\textwidth+20pt]{0.5pt}
   - \usepackage[T1]{fontenc}
@@ -63,6 +64,76 @@ header-includes:
   - \usepackage[final]{pdfpages}
   - \usepackage{graphicx}
 ---
+
+\begin{titlepage}
+\setlength{\voffset}{1.5cm}
+
+\unitlength1mm
+\begin{picture}(210,25)(31.38,-25)
+\put(0,0){\includegraphics*[viewport=0 723 595 796]{figures/IDS-Logo.pdf}}
+\end{picture}
+
+\center
+\vspace{-4em}
+\Large{\textsf{\TYPE}}
+\vspace{3em}
+
+\Huge{\textbf{\textsf{\TITLE}}}
+
+\vspace*{\fill} 
+\large{
+	\textsf{
+		angefertigt von\\
+		\vspace{1em}
+		\textbf{
+			\AUTHOR \\
+		}
+		%Matr.-Nr.: \MATRIKELNR\\
+	}
+}
+\vspace{4em}
+\large{
+	\textsf{
+		am\\
+		\vspace{0.5em}
+		\textbf{
+			Institut für Dynamik und Schwingungen\\
+			Technische Universität Braunschweig\\
+		}
+	}
+}
+\vspace{2em}
+\large{
+	\textsf{
+		Betreuer:\\
+		\vspace{0.5em}
+		\textbf{
+			Prof. Dr.-Ing. habil. G.-P. Ostermeyer\\
+			\BETREUER\\
+		}
+	}
+}
+\vspace{7em}
+\Large{
+	\textbf{
+		\setdatetoday
+		\datemonthname \ \the\year
+	}
+}
+\end{titlepage}
+
+\addchap*{Eidesstattliche Erklärung}
+
+
+\vspace*{5cm}
+
+
+Hiermit erkläre ich eidesstattlich, dass ich diese Arbeit eigenständig angefertigt und keine anderen als die angegebenen Hilfsmittel verwendet habe.
+
+\bigskip
+Braunschweig den \today
+
+\tableofcontents
 
 # Einführung
 
