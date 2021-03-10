@@ -10,7 +10,7 @@ classoption:
  - oneside
  - openany,
  - numbers=noenddot
- - bibligraphy=totoc
+ - bibliography=totoc
  - index=totoc
 author:
  - Xiao Wang
@@ -34,6 +34,7 @@ header-includes:
   - \usepackage[T1]{fontenc}
   - \usepackage{tikz-uml}
   - \usepackage{tikz}
+  - \usepackage{cite}
   - \usetikzlibrary{calc}
   - \usetikzlibrary{arrows,decorations.markings}
   - \usepackage{svg}
@@ -54,16 +55,15 @@ header-includes:
   - \usepackage{makecell}
   - \usepackage{wrapfig}
   - \usepackage{float}
-  - \setcounter{secnumdepth}{3}
-  - \setcounter{tocdepth}{4}
   - \usepackage[ngerman]{datenumber}
   - \pagestyle{scrheadings}
   - \setheadsepline{.4pt}
-  - \usepackage{bm} 
   - \usepackage{units}
   - \usepackage[final]{pdfpages}
   - \usepackage{graphicx}
 ---
+
+\pagenumbering{Roman}
 
 \begin{titlepage}
 \setlength{\voffset}{1.5cm}
@@ -88,7 +88,7 @@ header-includes:
 		\textbf{
 			\AUTHOR \\
 		}
-		%Matr.-Nr.: \MATRIKELNR\\
+		Matr.-Nr.: \MATRIKELNR\\
 	}
 }
 \vspace{4em}
@@ -122,18 +122,11 @@ header-includes:
 }
 \end{titlepage}
 
-\addchap*{Eidesstattliche Erklärung}
-
-
-\vspace*{5cm}
-
-
-Hiermit erkläre ich eidesstattlich, dass ich diese Arbeit eigenständig angefertigt und keine anderen als die angegebenen Hilfsmittel verwendet habe.
-
-\bigskip
-Braunschweig den \today
-
+\includepdf{chapters/Aufgabenstellung.pdf}
 \tableofcontents
+\newpage
+\setcounter{page}{1}
+\pagenumbering{arabic}
 
 # Einführung
 
@@ -155,7 +148,7 @@ Der wichtigste physikalische Vorgang bei der Simulation eines Billardspiels ist 
 
 Grundsätzlich lassen sich Stoßvorgänge in elastisch und inelastisch einteilen. Beim elastischen Stoß wird die gesamte kinetische Energie bei der Verformung der Körper in potentielle Energie umgewandelt. Beim inelastischen Stoß wird hingegen ein Teil der Energie in andere Energieformen konvertiert -- vor allem Wärme, Schall und die plastische Verformung von einem der Körper.
 
-Im makroskopischen Bereich ist der elastische Stoß nur als Idealisierung zu betrachten, da immer Wärme erzeugt wird. Wirklich elastische Kollisionen sind nur auf der Ebene von Atomen oder Quantenobjekten möglich. Zur Vereinfachung kann man den Verlust von kinetischer Energie vernachlässigen, unter der Voraussetzung, dass er gegenüber der Bewegungsenergie sehr klein ist. Bei der Kollision von zwei Billardkugeln -- welche oft als Beispiel für den elastischen Stoß verwendet wird ist dies der Fall [@Cross_2014].
+Im makroskopischen Bereich ist der elastische Stoß nur als Idealisierung zu betrachten, da immer Wärme erzeugt wird. Wirklich elastische Kollisionen sind nur auf der Ebene von Atomen oder Quantenobjekten möglich. Zur Vereinfachung kann man den Verlust von kinetischer Energie vernachlässigen, unter der Voraussetzung, dass er gegenüber der Bewegungsenergie sehr klein ist. Bei der Kollision von zwei Billardkugeln -- welche oft als Beispiel für den elastischen Stoß verwendet wird ist dies der Fall [@Cross2014].
 
 Im gegensatz zu den Kugeln, welche aus Phenoplast hergestellt werden, besteht der Bandenspiegel um den Tisch herum aus vulkanisierten Elastomeren, welche dazu dienen den Energieverlust des Balles gering zu halten. Je nach den gewählten Materialien unterscheidet sich das Effet verhalten des Balles. In unserem Fall gehen wir von einer harten und dichten Bande aus. Der Stoß kann so als rein elastisch betrachtet werden.
 
@@ -619,7 +612,7 @@ Da wir davon ausgehen, dass für kleine Geschwindigkeiten die lineare Rollreibun
 Qualitativ zeigt sich, dass die Kugeln zunächst so verlangsamt werden, wie man es auch von realen Billardkugeln erwarten würde, allerdings rollen die Kugeln am Ende der Bewegung unnatürlich lange aus. Da die Geschwindigkeit durch den obigen zusammenhang nicht null werden kann, wurde hier mit einer Geschwindigkeitsschwelle gearbeitet, ab der davon ausgegangen wird, dass sich die entsprechende Kugel nicht mehr bewegt. Es gilt also $|\vec{v}| < s \rightarrow \vec{v} = 0$. Die Messung der Zeit ergibt für dies Darstellung der Reibung ca. 14 Sekunden. Dies entspricht eher den erwarteten 6-9 Sekunden, als die rein lineare Reibung, ist aber nicht zufriedenstellend.
 
 ### Kombination der Effekte
-Es liegt nahe die beiden Reibungen zu kombinieren. Dies entspricht eher der realen Situation. Auch die Kombination aus dem schnellen abbremsen am Anfang bei der geschwindigkeitsabhängig Reibung mit der größeren Verlangsamung am Ende bei der linearen Darstellung verspricht ein insgesamt schnelleres abbremsen. In unserem Fall wechselt sich also die Dominanz der Reibungen ab. Dies lässt sich auch experimentell zeigen [@Carty_1957]. Die am einfachsten zu implementierende Lösung ist in diesem Fall beide Reibungseffekte zu berechnen und die Betragsmäßig größere Verlangsamung zu verwenden. 
+Es liegt nahe die beiden Reibungen zu kombinieren. Dies entspricht eher der realen Situation. Auch die Kombination aus dem schnellen abbremsen am Anfang bei der geschwindigkeitsabhängig Reibung mit der größeren Verlangsamung am Ende bei der linearen Darstellung verspricht ein insgesamt schnelleres abbremsen. In unserem Fall wechselt sich also die Dominanz der Reibungen ab. Dies lässt sich auch experimentell zeigen [@Carty1957]. Die am einfachsten zu implementierende Lösung ist in diesem Fall beide Reibungseffekte zu berechnen und die Betragsmäßig größere Verlangsamung zu verwenden. 
 $$v_t = \min \left\{ \vec{v}_{t-1} \cdot (1 - \mu), \quad \vec{v}_{t-1} - (1-\mu)\frac{\vec{v}_{t-1}}{||\vec{v}_{t-1}||}\right\}$$
 Diese Lösung führt qualitativ zu einem merklichen abbremsen am Anfang der Rollbewegung und auch gegen Ende bleibt das unnatürlich lange Ausrollen aus. Die insgesamte Rolldauer beträgt nach dem Anstoßen ca. 8 Sekunden und liegt damit innerhalb dessen, was in der realen situation Vorliegt. Auch vom Standpunkt, ob sich das Geschehen richtig anfühlt, liefert dieses Modell ein überzeugendes Ergebnis.
 
@@ -662,7 +655,7 @@ Durch die Variation der Reibungen und Massen ergeben sich zwei Beobachtungen. Di
 
 Um zu entscheiden, ob die hier gewählte Herangehensweisen an die Simulation ein zufriedenstellendes Ergebnis liefert, bieten sich zwei Kriterien an. Man könnte untersuchen, wie nah das Spiel an der physikalischen Realität liegt oder man könnte untersuchen ob die Simulation für den Spieler zufriedenstellend ist.
 
-Man kann vorwegnehmen, dass diese Simulation lediglich eine Zweidimensionale Darstellung eines Spiels bietet und somit einige Aspekte nicht adäquat abbilden kann. Hier ist vor allem der Drall vernachlässigt worden. Auch das Rollen der Kugel beinhaltet am Anfang noch eine translatorische Komponente [@Alicatore_1]. Zur einbettung dieser beiden Phänomene würde neue Queue-Steuerung benötigen, welche es erlaubt den genauen Punkt auszuwählen, an dem die Kugel angespielt werden soll.
+Man kann vorwegnehmen, dass diese Simulation lediglich eine Zweidimensionale Darstellung eines Spiels bietet und somit einige Aspekte nicht adäquat abbilden kann. Hier ist vor allem der Drall vernachlässigt worden. Auch das Rollen der Kugel beinhaltet am Anfang noch eine translatorische Komponente [@Alicatore]. Zur einbettung dieser beiden Phänomene würde neue Queue-Steuerung benötigen, welche es erlaubt den genauen Punkt auszuwählen, an dem die Kugel angespielt werden soll.
 
 Wie bereits oben ausgeführt, ist auch die Darstellungen der Reibungen unpräzise und entsprechen nicht genau den wirklich wirkenden Reibungen. Es lässt sich also festhalten, dass nur ein Teil der auftretenden Effekte berücksichtigt wurden und selbst dann nur als Näherung. Es stellt sich also die Frage, ob die entwickelte Simulation ausreichend genau ist, um das Spiel spielbar zu machen.
 
@@ -698,3 +691,75 @@ Da sich dieser Artikel auf die Implementierung des Programms selbst konzentriert
 Mit diesen Optimierungen wird das Spiel eine besseren Erfahrung. Dafür sind wir voller Erwartungen.
 
 # Quellen
+::: {#refs}
+:::
+\appendix
+\chapter*{Anhang}
+\addcontentsline{toc}{chapter}{Anhang}
+\setcounter{chapter}{1}
+\markboth{Anhang}{Anhang}
+\label{Anhang}
+
+\section{Messung der Effizienz von mathematischen Operationen}
+\label{sec:Anhang_1}
+
+\begin{verbatim}
+// https://latkin.org/blog/2014/11/09/a-simple-benchmark-of-various-math-operations/
+#include <math.h>
+#include <chrono>
+#include <cstdio>
+using namespace std;
+using namespace std::chrono;
+
+	class timer
+{
+public:
+    timer() : beg_(clock_::now()) {}
+    void reset() { beg_ = clock_::now(); }
+    double elapsed() const {
+        return duration_cast<second_>
+            (clock_::now() - beg_).count();
+    }
+
+private:
+    typedef high_resolution_clock clock_;
+    typedef duration<double, ratio<1>> second_;
+    time_point<clock_> beg_;
+};
+
+int main(char* argv)
+{
+    double total;
+    timer tmr;
+
+#define randf() ((double) rand()) / ((double) (rand_max))
+#define op_test(name, expr)               \
+    total = 0.0;                          \
+    srand(42);                            \
+    tmr.reset();                          \
+    for (int i = 0; i < 100000000; i++) { \
+        double r1 = randf();              \
+        double r2 = randf();              \
+        total += expr;                    \
+    }                                     \
+    double name = tmr.elapsed();          \
+    printf(#name);                        \
+    printf(" %.7f\n", name - baseline);
+
+    op_test(baseline, 1.0)
+
+    OP_TEST(plus, r1 + r2)
+    OP_TEST(minus, r1 - r2)
+    OP_TEST(mult, r1 * r2)
+    OP_TEST(div, r1 / r2)
+    OP_TEST(sqrt, sqrt(r1))
+    OP_TEST(sin, sin(r1))
+    OP_TEST(cos, cos(r1))
+    OP_TEST(tan, tan(r1))
+    OP_TEST(atan, atan(r1))
+    OP_TEST(exp, exp(r1))
+}
+
+\end{verbatim}
+
+
