@@ -28,7 +28,7 @@ header-includes:
   - \def \TITLE      {Simulation eines Billiardspiels}
   - \def \TYPE       {Studienarbeit}
   - \def \MATRIKELNR {}
-  - \def \BETREUER   {Ms. S. Mohammed Ishaoui}
+  - \def \BETREUER   {Ms. S. Mohamed Ichaoui}
   - \usepackage{scrlayer-scrpage}
   - \setheadsepline[\textwidth+20pt]{0.5pt}
   - \usepackage[T1]{fontenc}
