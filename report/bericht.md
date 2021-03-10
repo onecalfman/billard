@@ -379,8 +379,8 @@ Die Geschwindigkeiten der Kugeln werden dann auf den Normalenvektor projiziert. 
 
 Die so erhaltene Differenz der Geschwindigkeiten kann verwendet werden um die Finale Geschwindigkeit der beiden Kugeln zu errechnen. Da das Problem wieder auf den eindimensionalen Fall zurück geführt werde konnte kann auch die entsprechende Formel herangezogen werden. Die Geschwindigkeiten ergeben sich dann zu:
 \begin{align*}
-k1_{v2} &= \frac{k1_m}{k2_m} (k1_{v1} + \Delta \vec{v} \circ \hat{n}) \\
-k2_{v2} &= \frac{k2_m}{k1_m} (k2_{v1} - \Delta \vec{v} \circ \hat{n})
+k1_{v2} &= k1_{v1} + \frac{k1_m}{k2_m} (\Delta \vec{v} \circ \hat{n}) \\
+k2_{v2} &= k2_{v1} - \frac{k2_m}{k1_m} (\Delta \vec{v} \circ \hat{n})
 \end{align*}
 
 ## Informatik
