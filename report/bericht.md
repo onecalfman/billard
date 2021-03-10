@@ -70,7 +70,7 @@ header-includes:
 
 \unitlength1mm
 \begin{picture}(210,25)(31.38,-25)
-\put(0,0){\includegraphics*[viewport=0 723 595 796]{figures/IDS-Logo.pdf}}
+\put(0,0){\includegraphics*[viewport=0 723 595 796]{images/IDS-Logo.pdf}}
 \end{picture}
 
 \center
@@ -122,7 +122,7 @@ header-includes:
 }
 \end{titlepage}
 
-\includepdf{chapters/Aufgabenstellung.pdf}
+\includepdf{images/Aufgabenstellung.pdf}
 \tableofcontents
 \newpage
 \setcounter{page}{1}
